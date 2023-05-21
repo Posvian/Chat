@@ -1,8 +1,21 @@
 # Задание 6
-with open('test_file.txt', 'r') as f:
-    print(f)
+from chardet import detect
 
-file = open('test_file.txt', 'rb')
-for line in file:
-    line_decode = line.decode(encoding='utf-8')
-    print(line_decode)
+def encode_convert():
+    with open('test_file.txt', 'rb') as f:
+        content_bytes = f.read()
+    detected = detect(content_bytes)
+    print(detected)
+    encoding = detected['encoding']
+    content_text = content_bytes.decode(encoding)
+    with open('test.txt', 'w', encoding='utf-8') as f:
+        f.write(content_text)
+
+
+encode_convert()
+
+
+with open('test.txt', encoding='utf-8') as f:
+    content = f.read()
+    print(content)
+    
