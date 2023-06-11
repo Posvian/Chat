@@ -4,10 +4,12 @@ from socket import *
 import time
 import logging
 import log.client_log_config
+from decorators import log
 
 client_logger = logging.getLogger('Client')
 
 
+@log
 def make_presence(login='Guest'):
     out = {
         'action': 'presence',
@@ -19,6 +21,7 @@ def make_presence(login='Guest'):
     return out
 
 
+@log
 def server_answer_parser(answer):
     if 'response' in answer:
         if answer['response'] == 200:

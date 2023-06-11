@@ -3,10 +3,11 @@ import json
 from socket import *
 import logging
 import log.server_log_config
+from decorators import log
 
 server_logger = logging.getLogger('Server')
 
-
+@log
 def client_message_varification(message):
     server_logger.info('Идет верификация сообщения клиента')
     if 'action' in message and message['action'] == 'presence' and 'time' in message \
