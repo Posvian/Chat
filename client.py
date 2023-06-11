@@ -2,6 +2,10 @@ import sys
 import json
 from socket import *
 import time
+import logging
+import log.client_log_config
+
+client_logger = logging.getLogger('Client')
 
 
 def make_presence(login='Guest'):
@@ -18,8 +22,11 @@ def make_presence(login='Guest'):
 def server_answer_parser(answer):
     if 'response' in answer:
         if answer['response'] == 200:
+            client_logger.debug(f'Корректное сообщение от сервера')
             return '200 : OK'
+        client_logger.error(f'400 : {answer["error"]}')
         return f'400 : {answer["error"]}'
+    client_logger.critical(f'Неверный ответ сервера {answer}')
     raise ValueError
 
 
@@ -28,12 +35,13 @@ def main():
         server_ip = sys.argv[1]
         server_port = int(sys.argv[2])
         if server_port < 1024 or server_port > 65535:
+            client_logger.critical('Передан неверный порт')
             raise ValueError
     except IndexError:
         server_ip = '127.0.0.1'
         server_port = 7777
     except ValueError:
-        print('Порт должен быть в диапазоне 1024 и 65535.')
+        client_logger.error('Порт должен быть в диапазоне 1024 и 65535.')
         sys.exit(1)
 
     client_socket = socket(AF_INET, SOCK_STREAM)
@@ -50,7 +58,7 @@ def main():
         answer = server_answer_parser(json.loads(json_answer))
         print(answer)
     except (ValueError, json.JSONDecodeError):
-        print('Декодирование сообщения прошло неуспешно!')
+        client_logger.error('Декодирование сообщения прошло неуспешно!')
 
 
 if __name__ == '__main__':

@@ -1,12 +1,19 @@
 import sys
 import json
 from socket import *
+import logging
+import log.server_log_config
+
+server_logger = logging.getLogger('Server')
 
 
 def client_message_varification(message):
+    server_logger.info('Идет верификация сообщения клиента')
     if 'action' in message and message['action'] == 'presence' and 'time' in message \
             and 'user' in message and message['user']['account_name'] == 'Guest':
+        server_logger.debug('успешное подключение')
         return {'response' : 200}
+    server_logger.error('подключение не прошло, ошибка в сообщении!')
     return {
         'response': 400,
         'error': 'Bad request'
@@ -22,10 +29,10 @@ def main():
         if server_port < 1024 or server_port > 65535:
             raise ValueError
     except IndexError:
-        print('Нет номера порта после индекса -р')
+        server_logger.error('Нет номера порта после индекса -р')
         sys.exit(1)
     except ValueError:
-        print('Значение номера порта выходит из диапазона допустимых.')
+        server_logger.error('Значение номера порта выходит из диапазона допустимых.')
         sys.exit(1)
 
     try:
@@ -34,7 +41,7 @@ def main():
         else:
             server_ip = ''
     except IndexError:
-        print('нет номера порта после индекса -а')
+        server_logger.error('нет номера порта после индекса -а')
         sys.exit(1)
 
     server_socket = socket(AF_INET, SOCK_STREAM)
@@ -49,6 +56,7 @@ def main():
             json_message = data.decode('utf-8')
             message = json.loads(json_message)
             print(message)
+            server_logger.debug(f'Сообщение получено: {message}')
             response = client_message_varification(message)
 
             js_responce = json.dumps(response)
@@ -56,7 +64,7 @@ def main():
             client.send(encoded_responce)
             client.close()
         except (json.JSONDecodeError):
-            print('Некорректное сообщение от клиента')
+            server_logger.error('Некорректное сообщение от клиента')
             client.close()
 
 
