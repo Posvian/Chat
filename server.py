@@ -8,22 +8,38 @@ import logging
 import log.server_log_config
 from common.functions import send_message, get_message
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, MESSAGE, MESSAGE_TEXT, ERROR, \
-    DEFAULT_PORT, MAX_CONNECTIONS, SENDER
+    DEFAULT_PORT, MAX_CONNECTIONS, SENDER, DESTINATION, EXIT
 from decorators import log
 
 server_logger = logging.getLogger('Server')
 
 
 @log
-def client_message_varification(message, messages_list, client):
+def client_message_varification(message, messages_list, client, clients, names):
     server_logger.info('Идет верификация сообщения клиента')
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-            and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
-        send_message(client, {RESPONSE: 200})
+            and USER in message:
+        if message[USER][ACCOUNT_NAME] not in names.keys():
+            names[message[USER][ACCOUNT_NAME]] = client
+            send_message(client, {RESPONSE: 200})
+        else:
+            response = {
+                RESPONSE: 400,
+                ERROR: 'Имя уже занято, прошу выбрать другое.'
+            }
+            send_message(client, response)
+            clients.remove(client)
+            client.close()
         return
+
     elif ACTION in message and message[ACTION] == MESSAGE and \
-            TIME in message and MESSAGE_TEXT in message:
-        messages_list.append((message[ACCOUNT_NAME], message[MESSAGE_TEXT]))
+            DESTINATION in message and TIME in message and MESSAGE_TEXT in message and SENDER in message:
+        messages_list.append(message)
+        return
+    elif ACTION in message and message[ACTION] == EXIT and ACCOUNT_NAME in message:
+        clients.remove(names[message[ACCOUNT_NAME]])
+        names[message[ACCOUNT_NAME]].close()
+        del names[message[ACCOUNT_NAME]]
         return
     else:
         send_message(client, {
@@ -31,6 +47,16 @@ def client_message_varification(message, messages_list, client):
             ERROR: 'Bad request'
         })
         return
+
+
+@log
+def message_to_destination(message, names, listening_sockets):
+    if message[DESTINATION] in names and names[message[DESTINATION]] in listening_sockets:
+        send_message(names[message[DESTINATION]], message)
+    elif message[DESTINATION] in names and names[message[DESTINATION]] not in listening_sockets:
+        raise ConnectionError
+    else:
+        server_logger.error(f'Client {message[DESTINATION]} is not login.')
 
 
 @log
@@ -61,6 +87,8 @@ def main():
     clients = []
     messages = []
 
+    names = dict()
+
     server_socket.listen(MAX_CONNECTIONS)
     while True:
         try:
@@ -83,26 +111,20 @@ def main():
         if recv_data_lst:
             for client_with_message in recv_data_lst:
                 try:
-                    client_message_varification(get_message(client_with_message), messages, client_with_message)
-                except:
+                    client_message_varification(get_message(client_with_message), messages, client_with_message,
+                                                clients, names)
+                except Exception:
                     server_logger.info(f'Клиент {client_with_message.getpeername()} отключился')
                     clients.remove(client_with_message)
 
-        if messages and send_data_lst:
-            message = {
-                ACTION: MESSAGE,
-                SENDER: messages[0][0],
-                TIME: time.time(),
-                MESSAGE_TEXT: messages[0][1]
-            }
-            del messages[0]
-            for client in send_data_lst:
-                try:
-                    send_message(client, message)
-                except:
-                    server_logger.info(f'Клиент {client.getpeername()}')
-                    clients.remove(client)
-
+        for message in messages:
+            try:
+                message_to_destination(message, names, send_data_lst)
+            except Exception:
+                server_logger.debug(f'connection with {message[DESTINATION]} was lost')
+                clients.remove(names[message[DESTINATION]])
+                del names[message[DESTINATION]]
+        messages.clear()
 
 if __name__ == '__main__':
     main()
