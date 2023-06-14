@@ -1,17 +1,130 @@
-2023-06-04 14:22:44,272        DEBUG      server               Сообщение получено: {'action': 'presence', 'time': 1685877764.27223, 'user': {'account_name': 'Guest'}}
-2023-06-04 14:22:44,273        INFO       server               Идет верификация сообщения клиента
-2023-06-04 14:22:44,273        DEBUG      server               успешное подключение
-2023-06-04 14:22:54,773        DEBUG      server               Сообщение получено: {'action': 'presence', 'time': 1685877774.773676, 'user': {'account_name': 'Guest'}}
-2023-06-04 14:22:54,773        INFO       server               Идет верификация сообщения клиента
-2023-06-04 14:22:54,773        DEBUG      server               успешное подключение
-2023-06-04 14:22:57,867        DEBUG      server               Сообщение получено: {'action': 'presence', 'time': 1685877777.867232, 'user': {'account_name': 'Guest'}}
-2023-06-04 14:22:57,867        INFO       server               Идет верификация сообщения клиента
-2023-06-04 14:22:57,867        DEBUG      server               успешное подключение
-2023-06-11 15:28:05,489        DEBUG      server               Сообщение получено: {'action': 'presence', 'time': 1686490085.486201, 'user': {'account_name': 'Guest'}}
-2023-06-11 15:28:05,489        INFO       server               Идет верификация сообщения клиента
-2023-06-11 15:28:05,489        DEBUG      server               успешное подключение
-2023-06-11 15:28:05,489        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
-2023-06-11 15:29:14,533        DEBUG      server               Сообщение получено: {'action': 'presence', 'time': 1686490154.532455, 'user': {'account_name': 'Guest'}}
-2023-06-11 15:29:14,533        INFO       server               Идет верификация сообщения клиента
-2023-06-11 15:29:14,533        DEBUG      server               успешное подключение
-2023-06-11 15:29:14,534        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 17:49:44,212        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 17:49:44,212        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 17:49:50,302        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 17:49:50,302        INFO       server               Идет верификация сообщения клиента
+2023-06-12 17:49:50,302        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 17:49:50,302        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:21,821        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:21,821        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:04:26,410        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,410        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:04:26,410        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,410        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:26,894        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:46,436        INFO       server               Клиент ('127.0.0.1', 59704) отключился
+2023-06-12 18:04:57,959        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:57,961        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:04:57,961        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:04:57,961        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:57,961        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:04:57,961        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:34,211        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:05:34,211        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:05:50,418        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:05:50,418        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,334        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,334        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,334        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:05:56,846        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,847        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:05:56,847        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,847        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:05:56,847        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,847        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:05:56,847        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:05:56,847        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:06:05,363        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:05,364        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:06:05,364        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:06:05,364        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:05,364        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:05,365        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:05,365        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:09,873        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:09,873        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:06:09,874        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:06:09,874        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:09,874        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:09,874        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:09,874        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:18,391        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:18,392        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:06:18,392        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:06:18,393        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:18,393        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:18,393        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:06:18,393        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:44,228        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:07:44,228        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:47,557        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:47,557        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:47,557        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:07:48,090        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:48,091        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:07:48,091        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:48,091        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:07:48,091        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:48,091        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:07:48,092        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:07:48,092        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:09,686        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:09,686        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:12:12,107        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:12,107        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:12:13,926        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:13,926        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:12:15,224        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:15,224        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:12:23,079        DEBUG      server               Была вызвана функция arg_parser , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:23,079        INFO       server               Запущен сервер с параметрами : 7777
+2023-06-12 18:12:25,252        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:25,252        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:25,252        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:25,252        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:25,253        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:25,253        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:25,253        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:25,253        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:26,263        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:26,264        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:26,264        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:26,264        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:26,264        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:26,264        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:26,264        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:26,264        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:33,780        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:33,782        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:33,782        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:33,783        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:33,783        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:33,783        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:33,783        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:37,792        DEBUG      server               Была вызвана функция get_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:37,792        INFO       server               Идет верификация сообщения клиента
+2023-06-12 18:12:37,792        DEBUG      server               Была вызвана функция client_message_varification , была вызвана из функции main().Вызов из модуля __main__.
+2023-06-12 18:12:37,793        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:37,793        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:37,793        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
+2023-06-12 18:12:37,794        DEBUG      server               Была вызвана функция send_message , была вызвана из функции main().Вызов из модуля common.functions.
