@@ -23,17 +23,17 @@ while True:
             f' script "python3 {PATH_TO_SCRIPT_SERVER}"\'', shell=True)
     elif CHOICE == '2':
         print("Запустили клиенты")
-        for i in range(2):
+        for i in range(4):
             CLIENTS.append(
                 Popen(
                     f'osascript -e \'tell application "Terminal" to do'
                     f' script "python3 {PATH_TO_SCRIPT_CLIENTS}"\'',
                     shell=True))
-            CLIENTS.append(
-                Popen(
-                    f'osascript -e \'tell application "Terminal" to do'
-                    f' script "python3 {PATH_TO_SCRIPT_CLIENTS} -m send"\'',
-                    shell=True))
+            # CLIENTS.append(
+            #     Popen(
+            #         f'osascript -e \'tell application "Terminal" to do'
+            #         f' script "python3 {PATH_TO_SCRIPT_CLIENTS} -m send"\'',
+            #         shell=True))
             # Задержка для того, что бы отправляющий процесс успел
             # зарегистрироваться на сервере, и потом в словаре имен
             # клиентов остался только слушающий клиент
