@@ -23,11 +23,11 @@ while True:
             f' script "python3 {PATH_TO_SCRIPT_SERVER}"\'', shell=True)
     elif CHOICE == '2':
         print("Запустили клиенты")
-        for i in range(4):
+        for i in range(2):
             CLIENTS.append(
                 Popen(
                     f'osascript -e \'tell application "Terminal" to do'
-                    f' script "python3 {PATH_TO_SCRIPT_CLIENTS}"\'',
+                    f' script "python3 {PATH_TO_SCRIPT_CLIENTS} -n test{i + 1}"\'',
                     shell=True))
             # CLIENTS.append(
             #     Popen(
