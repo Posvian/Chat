@@ -47,13 +47,7 @@ class ClientSender(threading.Thread, metaclass=ClientVerifier):
             client_logger.debug('Потеряно соединение с сервером.')
             exit(1)
 
-    def user_help(self):
-        print('Выберите одну из команд:')
-        print('exit - выход;')
-        print('help - позвать на помощь;')
-        print('message - отправить сообщение.')
-
-    def menu(self):
+    def run(self):
         self.user_help()
         while True:
             command = input('Введите команду: ')
@@ -72,6 +66,12 @@ class ClientSender(threading.Thread, metaclass=ClientVerifier):
             else:
                 print('Такой команды нет, мы работаем над искусственным интеллектом, но пока введите "help"')
 
+    def user_help(self):
+        print('Выберите одну из команд:')
+        print('exit - выход;')
+        print('help - позвать на помощь;')
+        print('message - отправить сообщение.')
+
 
 class ClientReader(threading.Thread, metaclass=ClientVerifier):
     def __init__(self, login, client_socket):
@@ -79,7 +79,7 @@ class ClientReader(threading.Thread, metaclass=ClientVerifier):
         self.client_socket = client_socket
         super().__init__()
 
-    def message_from_server(self):
+    def run(self):
         while True:
             try:
                 message = get_message(self.client_socket)
