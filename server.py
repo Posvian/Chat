@@ -1,6 +1,7 @@
 import argparse
 import sys
 import json
+import threading
 import time
 from select import select
 from socket import *
@@ -12,19 +13,25 @@ from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONS
 from decorators import log
 from descriptors import PortVerifier
 from metaclasses import ServerVerifier
+from server_database import ServerStorage
 
 server_logger = logging.getLogger('Server')
 
 
-class Server(metaclass=ServerVerifier):
+class Server(threading.Thread, metaclass=ServerVerifier):
     port = PortVerifier('port')
 
-    def __init__(self, listen_address, listen_port):
+    def __init__(self, listen_address, listen_port, database):
         self.address = listen_address
         self.port = listen_port
+
+        self.database = database
+
         self.clients = []
         self.messages = []
         self.names = dict()
+
+        super().__init__()
 
     def init_socket(self):
         server_logger.info(f'Запущен сервер с параметрами {self.address}: {self.port}')
@@ -48,9 +55,10 @@ class Server(metaclass=ServerVerifier):
         server_logger.info('Идет верификация сообщения клиента')
         if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
                 and USER in message:
-            print(message)
             if message[USER][ACCOUNT_NAME] not in self.names.keys():
                 self.names[message[USER][ACCOUNT_NAME]] = client
+                client_ip, client_port = client.getpeername()
+                self.database.user_login(message[USER][ACCOUNT_NAME], client_ip, client_port)
                 send_message(client, {RESPONSE: 200})
             else:
                 response = {
@@ -67,9 +75,10 @@ class Server(metaclass=ServerVerifier):
             self.messages.append(message)
             return
         elif ACTION in message and message[ACTION] == EXIT and ACCOUNT_NAME in message:
+            self.database.user_logout(message[ACCOUNT_NAME])
             self.clients.remove(self.names[ACCOUNT_NAME])
-            self.names[ACCOUNT_NAME].close()
-            del self.names[ACCOUNT_NAME]
+            self.names[message[ACCOUNT_NAME]].close()
+            del self.names[message[ACCOUNT_NAME]]
             return
         else:
             send_message(client, {
@@ -78,7 +87,7 @@ class Server(metaclass=ServerVerifier):
             })
             return
 
-    def main_function(self):
+    def run(self):
         self.init_socket()
 
         while True:
@@ -115,7 +124,6 @@ class Server(metaclass=ServerVerifier):
                     self.clients.remove(self.names[message[DESTINATION]])
                     del self.names[message[DESTINATION]]
             self.messages.clear()
-
 
 
 #
@@ -175,58 +183,46 @@ def arg_parser():
     return listen_address, listen_port
 
 
+def print_help():
+    print('Введите одну из команд:')
+    print('users - список всех пользователей.')
+    print('connected - список пользователей онлайн.')
+    print('loging_history - история входов.')
+    print('exit - завершение работы сервера.')
+    print('help - повторный вывод подсказок.')
+
+
 def main():
     listen_address, listen_port = arg_parser()
 
-    server = Server(listen_address, listen_port)
-    server.main_function()
-    # server_logger.info(f'Запущен сервер с параметрами {listen_address}: {listen_port}')
-    #
-    # server_socket = socket(AF_INET, SOCK_STREAM)
-    # server_socket.bind((listen_address, listen_port))
-    # server_socket.settimeout(0.5)
-    #
-    # clients = []
-    # messages = []
-    #
-    # names = dict()
-    #
-    # server_socket.listen(MAX_CONNECTIONS)
-    # while True:
-    #     try:
-    #         client, client_address = server_socket.accept()
-    #     except OSError:
-    #         pass
-    #     else:
-    #         clients.append(client)
-    #
-    #     recv_data_lst = []
-    #     send_data_lst = []
-    #     err_lst = []
-    #
-    #     try:
-    #         if clients:
-    #             recv_data_lst, send_data_lst, err_lst = select(clients, clients, [], 0)
-    #     except OSError:
-    #         pass
-    #
-    #     if recv_data_lst:
-    #         for client_with_message in recv_data_lst:
-    #             try:
-    #                 client_message_varification(get_message(client_with_message), messages, client_with_message,
-    #                                             clients, names)
-    #             except Exception:
-    #                 server_logger.info(f'Клиент {client_with_message.getpeername()} отключился')
-    #                 clients.remove(client_with_message)
-    #
-    #     for message in messages:
-    #         try:
-    #             message_to_destination(message, names, send_data_lst)
-    #         except Exception:
-    #             server_logger.debug(f'connection with {message[DESTINATION]} was lost')
-    #             clients.remove(names[message[DESTINATION]])
-    #             del names[message[DESTINATION]]
-    #     messages.clear()
+    database = ServerStorage()
+
+    server = Server(listen_address, listen_port, database)
+    server.daemon = True
+    server.start()
+
+    print_help()
+
+    while True:
+        command = input('Введите команду: ')
+        if command == 'help':
+            print_help()
+        elif command == 'exit':
+            break
+        elif command == 'users':
+            for user in sorted(database.users_list()):
+                print(f'Пользователь {user[0]}, последний вход: {user[1]}')
+        elif command == 'connected':
+            for user in sorted(database.active_users_list()):
+                print(f'Пользователь {user[0]}, подключен: {user[1]}:{user[2]}, время установки соединения: {user[3]}')
+        elif command == 'loging_history':
+            name = input(
+                'Введите имя пользователя для просмотра истории. Для вывода всей истории, просто нажмите Enter: ')
+            for user in sorted(database.login_history(name)):
+                print(f'Пользователь: {user[0]} время входа: {user[1]}. Вход с: {user[2]}:{user[3]}')
+        else:
+            print('Команда не распознана.')
+
 
 if __name__ == '__main__':
     main()

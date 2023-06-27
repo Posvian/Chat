@@ -19,3 +19,5 @@ MESSAGE = 'message'
 MESSAGE_TEXT = 'message_text'
 EXIT = 'exit'
 
+SERVER_DATABASE = 'sqlite:///server_base.db3'
+
