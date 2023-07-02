@@ -17,7 +17,7 @@ def log(func):
         logger.debug(
             f'Была вызвана функция {func.__name__} , '
             f'была вызвана из функции {traceback.format_stack()[0].strip().split()[-1]}.'
-            f'Вызов из модуля {func.__module__}.', stacklevel=2)
+            f'Вызов из модуля {func.__module__}.')
 
         return res
 
