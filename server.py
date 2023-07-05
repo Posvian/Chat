@@ -12,7 +12,7 @@ import log.server_log_config
 from common.functions import send_message, get_message
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, MESSAGE, MESSAGE_TEXT, ERROR, \
     DEFAULT_PORT, MAX_CONNECTIONS, SENDER, DESTINATION, EXIT, RESPONSE_202, LIST_INFO, GET_CONTACTS, ADD_CONTACT, \
-    RESPONSE_200, REMOVE_CONTACT, USERS_REQUEST
+    RESPONSE_200, REMOVE_CONTACT, USERS_REQUEST, RESPONSE_400
 from decorators import log
 from descriptors import PortVerifier
 from metaclasses import ServerVerifier
@@ -64,36 +64,38 @@ class Server(threading.Thread, metaclass=ServerVerifier):
     def client_message_varification(self, message, client):
         global new_connection
         server_logger.info('Идет верификация сообщения клиента')
-        if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-                and USER in message:
+        if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message:
             if message[USER][ACCOUNT_NAME] not in self.names.keys():
                 self.names[message[USER][ACCOUNT_NAME]] = client
                 client_ip, client_port = client.getpeername()
                 self.database.user_login(message[USER][ACCOUNT_NAME], client_ip, client_port)
-                send_message(client, {RESPONSE: 200})
+                send_message(client, RESPONSE_200)
                 with conflag_lock:
                     new_connection = True
             else:
-                response = {
-                    RESPONSE: 400,
-                    ERROR: 'Имя уже занято, прошу выбрать другое.'
-                }
+                response = RESPONSE_400
+                response[ERROR] = 'Имя пользователя уже занято.'
                 send_message(client, response)
                 self.clients.remove(client)
                 client.close()
             return
 
-        elif ACTION in message and message[ACTION] == MESSAGE and \
-                DESTINATION in message and TIME in message and MESSAGE_TEXT in message and SENDER in message and \
-                self.names[message[SENDER]] == client:
-            self.messages.append(message)
-            self.database.process_message(
-                message[SENDER], message[DESTINATION]
-            )
+        elif ACTION in message and message[ACTION] == MESSAGE and DESTINATION in message and TIME in message \
+                and SENDER in message and MESSAGE_TEXT in message and self.names[message[SENDER]] == client:
+            if message[DESTINATION] in self.names:
+                self.messages.append(message)
+                self.database.process_message(message[SENDER], message[DESTINATION])
+                send_message(client, RESPONSE_200)
+            else:
+                response = RESPONSE_400
+                response[ERROR] = 'Пользователь не зарегистрирован на сервере.'
+                send_message(client, response)
             return
+
         elif ACTION in message and message[ACTION] == EXIT and ACCOUNT_NAME in message \
                 and self.names[message[ACCOUNT_NAME]] == client:
             self.database.user_logout(message[ACCOUNT_NAME])
+            server_logger.info(f'Клиент {message[ACCOUNT_NAME]} корректно отключился от сервера.')
             self.clients.remove(self.names[message[ACCOUNT_NAME]])
             self.names[message[ACCOUNT_NAME]].close()
             del self.names[message[ACCOUNT_NAME]]
@@ -120,18 +122,17 @@ class Server(threading.Thread, metaclass=ServerVerifier):
         elif ACTION in message and message[ACTION] == USERS_REQUEST and ACCOUNT_NAME in message \
                 and self.names[message[ACCOUNT_NAME]] == client:
             response = RESPONSE_202
-            response[LIST_INFO] = [user[0]
-                                   for user in self.database.users_list()]
+            response[LIST_INFO] = [user[0] for user in self.database.users_list()]
             send_message(client, response)
 
         else:
-            send_message(client, {
-                RESPONSE: 400,
-                ERROR: 'Bad request'
-            })
+            response = RESPONSE_400
+            response[ERROR] = 'Запрос некорректен.'
+            send_message(client, response)
             return
 
     def run(self):
+        global new_connection
         self.init_socket()
 
         while True:
@@ -156,7 +157,7 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                 for client_with_message in recv_data_lst:
                     try:
                         self.client_message_varification(get_message(client_with_message), client_with_message)
-                    except:
+                    except (OSError):
                         server_logger.info(f'Клиент {client_with_message.getpeername()} отключился')
                         for name in self.names:
                             if self.names[name] == client_with_message:
@@ -164,6 +165,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                                 del self.names[name]
                                 break
                         self.clients.remove(client_with_message)
+                        with conflag_lock:
+                            new_connection = True
 
             for message in self.messages:
                 try:
@@ -173,6 +176,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                     self.clients.remove(self.names[message[DESTINATION]])
                     self.database.user_logout(message[DESTINATION])
                     del self.names[message[DESTINATION]]
+                    with conflag_lock:
+                        new_connection = True
             self.messages.clear()
 
 
@@ -187,20 +192,24 @@ def arg_parser(port, address):
     return listen_address, listen_port
 
 
-# def print_help():
-#     print('Введите одну из команд:')
-#     print('users - список всех пользователей.')
-#     print('connected - список пользователей онлайн.')
-#     print('loging_history - история входов.')
-#     print('exit - завершение работы сервера.')
-#     print('help - повторный вывод подсказок.')
+def config_load():
+    config = configparser.ConfigParser()
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    config.read(f"{dir_path}/{'server.ini'}")
+
+    if 'SETTINGS' in config:
+        return config
+    else:
+        config.add_section('SETTINGS')
+        config.set('SETTINGS', 'Default_port', str(DEFAULT_PORT))
+        config.set('SETTINGS', 'Listen_Address', '')
+        config.set('SETTINGS', 'Database_path', '')
+        config.set('SETTINGS', 'Database_file', 'server_database.db3')
+        return config
 
 
 def main():
-    config = configparser.ConfigParser()
-
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    config.read(f"{dir_path}/{'server.ini'}")
+    config = config_load()
 
     listen_address, listen_port = arg_parser(config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
 
@@ -280,26 +289,6 @@ def main():
     main_window.config_btn.triggered.connect(server_config)
 
     server_app.exec_()
-    #
-    # while True:
-    #     command = input('Введите команду: ')
-    #     if command == 'help':
-    #         print_help()
-    #     elif command == 'exit':
-    #         break
-    #     elif command == 'users':
-    #         for user in sorted(database.users_list()):
-    #             print(f'Пользователь {user[0]}, последний вход: {user[1]}')
-    #     elif command == 'connected':
-    #         for user in sorted(database.active_users_list()):
-    #             print(f'Пользователь {user[0]}, подключен: {user[1]}:{user[2]}, время установки соединения: {user[3]}')
-    #     elif command == 'loging_history':
-    #         name = input(
-    #             'Введите имя пользователя для просмотра истории. Для вывода всей истории, просто нажмите Enter: ')
-    #         for user in sorted(database.login_history(name)):
-    #             print(f'Пользователь: {user[0]} время входа: {user[1]}. Вход с: {user[2]}:{user[3]}')
-    #     else:
-    #         print('Команда не распознана.')
 
 
 if __name__ == '__main__':
