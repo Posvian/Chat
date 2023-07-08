@@ -40,7 +40,7 @@ class ServerStorage:
             self.sent = 0
             self.accepted = 0
 
-    def __init__(self, path='server_base.db3'):
+    def __init__(self, path):
         self.database_engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=7200,
                                              connect_args={'check_same_thread': False})
         self.metadata = MetaData()
@@ -156,13 +156,17 @@ class ServerStorage:
             query = query.filter(self.AllUsers.name == username)
         return query.all()
 
-    def process_message(self, sender, destination):
+    def process_message(self, sender, recipient):
+
+        # Получаем ID отправителя и получателя
         sender = self.session.query(self.AllUsers).filter_by(name=sender).first().id
-        destination = self.session.query(self.AllUsers).filter_by(name=destination).first().id
-        sender_count = self.session.query(self.UsersHistory).filter_by(user=sender).first()
-        sender_count.sent += 1
-        destination_count = self.session.query(self.UsersHistory).filter_by(user=destination).first()
-        destination_count.accepted += 1
+        recipient = self.session.query(self.AllUsers).filter_by(name=recipient).first().id
+        # Запрашиваем строки из истории и увеличиваем счётчики
+        sender_row = self.session.query(self.UsersHistory).filter_by(user=sender).first()
+        sender_row.sent += 1
+        recipient_row = self.session.query(self.UsersHistory).filter_by(user=recipient).first()
+        recipient_row.accepted += 1
+
         self.session.commit()
 
     def add_contact(self, user, contact):
