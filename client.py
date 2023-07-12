@@ -1,10 +1,9 @@
-
+import os.path
 import sys
 import logging
 import argparse
-
-from PyQt5.QtWidgets import QApplication
-
+from Cryptodome.PublicKey import RSA
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from common.variables import *
 from common.errors import ServerError
@@ -19,34 +18,42 @@ client_logger = logging.getLogger('Client')
 
 @log
 def arg_parser():
+    """
+    Функция - парсер аргументов командной строки.
+    Возвращает список из 4-х аргументов.
+    Также проверяет корректность номера порта.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('addr', default=DEFAULT_IP_ADRESS, nargs='?')
     parser.add_argument('port', default=DEFAULT_PORT, type=int, nargs='?')
     parser.add_argument('-n', '--name', default=None, nargs='?')
+    parser.add_argument('-p', '--password', default='', nargs='?')
     namespace = parser.parse_args(sys.argv[1:])
     server_address = namespace.addr
     server_port = namespace.port
     client_name = namespace.name
+    client_password = namespace.password
 
     if not 1023 < server_port < 65536:
         client_logger.critical(f'Порт должен быть в диапазоне 1024 и 65535. '
                                f'Попытка запуска с портом {server_port}')
         exit(1)
 
-    return server_address, server_port, client_name
+    return server_address, server_port, client_name, client_password
 
 
 if __name__ == '__main__':
-    server_address, server_port, client_name = arg_parser()
+    server_address, server_port, client_name, client_password = arg_parser()
 
     client_app = QApplication(sys.argv)
 
-    if not client_name:
-        start_dialog = UserNameDialog()
+    start_dialog = UserNameDialog()
+
+    if not client_name or not client_password:
         client_app.exec_()
         if start_dialog.ok_pressed:
             client_name = start_dialog.client_name.text()
-            del start_dialog
+            client_password = start_dialog.client_password.text()
         else:
             exit(0)
 
@@ -56,17 +63,30 @@ if __name__ == '__main__':
                        f'имя пользователя: {client_name}'
                        )
 
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    key_file = os.path.join(dir_path, f'{client_name}.key')
+    if not os.path.exists(key_file):
+        keys = RSA.generate(2048, os.urandom)
+        with open(key_file, 'wb') as key:
+            key.write(keys.export_key())
+    else:
+        with open(key_file, 'rb') as key:
+            keys = RSA.import_key(key.read())
+
     database = ClientDatabase(client_name)
 
     try:
-        transport = ClientTransport(server_port, server_address, database, client_name)
+        transport = ClientTransport(server_port, server_address, database, client_name, client_password, keys)
     except ServerError as error:
-        print(error.text)
+        message = QMessageBox()
+        message.critical(start_dialog, 'Ошибка сервера', error.text)
         exit(1)
     transport.setDaemon(True)
     transport.start()
 
-    main_window = ClientMainWindow(database, transport)
+    del start_dialog
+
+    main_window = ClientMainWindow(database, transport, keys)
     main_window.make_connection(transport)
 
     main_window.setWindowTitle(f'Чат Программа alpha release - {client_name}')
