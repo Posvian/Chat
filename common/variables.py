@@ -12,6 +12,8 @@ USER = 'user'
 ACCOUNT_NAME = 'account_name'
 SENDER = 'sender'
 DESTINATION = 'to'
+DATA = 'bin'
+PUBLIC_KEY = 'pubkey'
 
 PRESENCE = 'presence'
 RESPONSE = 'response'
@@ -24,6 +26,7 @@ LIST_INFO = 'data_list'
 REMOVE_CONTACT = 'remove'
 ADD_CONTACT = 'add'
 USERS_REQUEST = 'get_users'
+PUBLIC_KEY_REQUEST = 'pubkey_need'
 
 SERVER_DATABASE = 'sqlite:///server_base.db3'
 
@@ -37,4 +40,13 @@ RESPONSE_400 = {
             RESPONSE: 400,
             ERROR: None
         }
+
+RESPONSE_205 = {
+    RESPONSE: 205
+}
+
+RESPONSE_511 = {
+    RESPONSE: 511,
+    DATA: None
+}
 
