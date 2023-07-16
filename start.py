@@ -12,6 +12,8 @@ SERVER = ''
 PATH_TO_FILE = os.path.dirname(__file__)
 PATH_TO_SCRIPT_SERVER = os.path.join(PATH_TO_FILE, "server.py")
 PATH_TO_SCRIPT_CLIENTS = os.path.join(PATH_TO_FILE, "client.py")
+env = os.environ.copy()
+env['PATH'] = '/Users/dmitriiposvanskii/Desktop/Chat/Chat/venv/bin'
 
 while True:
     CHOICE = input(CHOICE_TEXT)
@@ -27,8 +29,8 @@ while True:
             CLIENTS.append(
                 Popen(
                     f'osascript -e \'tell application "Terminal" to do'
-                    f' script "python3 {PATH_TO_SCRIPT_CLIENTS} -n test{i + 1}"\'',
-                    shell=True))
+                    f' script "python3 {PATH_TO_SCRIPT_CLIENTS} -n test{i + 1} -p 123456"\'',
+                    shell=True, env=env))
             # CLIENTS.append(
             #     Popen(
             #         f'osascript -e \'tell application "Terminal" to do'
