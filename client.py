@@ -34,6 +34,7 @@ def arg_parser():
     client_name = namespace.name
     client_password = namespace.password
 
+
     if not 1023 < server_port < 65536:
         client_logger.critical(f'Порт должен быть в диапазоне 1024 и 65535. '
                                f'Попытка запуска с портом {server_port}')
